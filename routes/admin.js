@@ -15,10 +15,10 @@ router.get('/audiobooks', adminController.getAudiobooks);
 // /admin/add-product => POST
 router.post('/add-audiobook', adminController.postAddAudiobook);
 
-// router.get('/edit-product/:productId', adminController.getEditAudiobook);
+router.get('/edit-audiobook/:audiobookId', adminController.getEditAudiobook);
 
-// router.post('/edit-product', adminController.postEditProduct);
+router.post('/edit-audiobook', adminController.postEditAudiobook);
 
-router.post('/delete-product', adminController.postDeleteAudiobook);
+router.post('/delete-audiobook', adminController.postDeleteAudiobook);
 
 module.exports = router;

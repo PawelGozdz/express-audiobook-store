@@ -21,9 +21,55 @@ exports.postAddAudiobook = (req, res, next) => {
     imageUrl,
     description,
     author
-    // userId: req.user.id
+    // userId: req.user.id  
   })
     .then((results) => {
+      res.redirect('/admin/audiobooks');
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getEditAudiobook = (req, res, next) => {
+  const editMode = JSON.parse(req.query.edit);
+  if (!editMode) {
+    return res.redirect('/');
+  }
+  const { audiobookId } = req.params;
+  req.user.getAudiobooks({ where: { id: audiobookId } })
+  // Audiobook.findById(audiobookId)
+    .then((audiobooks) => {
+      const audiobook = audiobooks[0];
+      if (!audiobook) {
+        return res.redirect('/');
+      }
+      res.render('admin/edit-audiobook', {
+        pageTitle: 'Edit Audiobook',
+        path: '/admin/edit-audiobook',
+        editing: editMode,
+        audiobook
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postEditAudiobook = (req, res, next) => {
+  const { audiobookId } = req.body;
+  const newTitle = req.body.title;
+  const newPrice = req.body.price;
+  const newImageUrl = req.body.imageUrl;
+  const newDesc = req.body.description;
+  const newAuthor = req.body.author;
+  Audiobook.findById(audiobookId)
+    .then((audiobook) => {
+      audiobook.title = newTitle;
+      audiobook.imageUrl = newImageUrl;
+      audiobook.description = newDesc;
+      audiobook.price = newPrice;
+      audiobook.author = newAuthor;
+      return audiobook.save();
+    })
+    .then((result) => {
+      console.log('PRODUCT HAS BEEN UPDATED!');
       res.redirect('/admin/audiobooks');
     })
     .catch(err => console.log(err));
@@ -43,9 +89,8 @@ exports.getAudiobooks = (req, res, next) => {
 };
 
 exports.postDeleteAudiobook = (req, res, next) => {
-  const audioId = req.body.audiobookId;
-  console.log(audioId);
-  Audiobook.findById(audioId)
+  const { audiobookId } = req.body;
+  Audiobook.findById(audiobookId)
     .then(audiobook => audiobook.destroy())
     .then((result) => {
       console.log('PRODUCT DESTROYED');
