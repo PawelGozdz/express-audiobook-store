@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    title #{pageTitle}
+    link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css", integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO", crossorigin="anonymous")
+    link(rel="stylesheet", href="/css/main.css")
+
+  body
+    header.container-fluid.bg-light.text-white
+      .container
+        nav.navbar.navbar-expand-sm.text-sm-center
+          a(href="#").navbar-brand LOGO
+          ul.navbar-nav.mr-auto
+            li.nav-item
+              a(href="/", class=(path === '/' ? 'active' : '')).nav-link Store
+            li.nav-item
+              a(href="/admin/add-audiobook", class=(path === '/admin/add-audiobook' ? 'active' : '')).nav-link Add Audiobooks
+
+    block content
+
+    footer.container-fluid.bg-dark.text-white.footer
+      .container
+        p.p-2.text-center Audiobook Online Store

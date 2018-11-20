@@ -1,0 +1,24 @@
+extends ../layouts/main-layout.pug
+
+block content
+  main
+    section.container.text-center
+      h1.my-3.my-md-4 #{pageTitle}
+      hr
+      .row.justify-content-center
+        if audiobooks.length > 0
+          each audiobook in audiobooks
+            .col-8.col-sm-6.col-md-4.col-lg-3.my-2.my-lg-3
+              article.card.article__card.text-center
+                img(src=audiobook.imageUrl alt=audiobook.title).card-img-top
+                .card-body
+                  h5.card-title #{audiobook.title}
+                  p.card-text #{audiobook.author}
+                  p.card-text #{audiobook.description}
+                  p.card-text £#{audiobook.price}
+                  form(action="/admin/delete-product", method="POST")
+                    a(href="#").btn.btn-secondary.mr-1 Edit  
+                    input(type="hidden", value=audiobook.id, name="audiobookId")
+                    button(type="submit").btn.btn-danger Delete
+        else 
+          h2 No Products
