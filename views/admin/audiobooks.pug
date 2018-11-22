@@ -15,6 +15,7 @@ block content
                   h5.card-title #{audiobook.title}
                   p.card-text #{audiobook.author}
                   p.card-text #{audiobook.description}
+                  p.card-text #{audiobook.category}
                   p.card-text £#{audiobook.price}
                   form(action="/admin/delete-audiobook", method="POST")
                     a(href=`/admin/edit-audiobook/${audiobook.id}?edit=true`).btn.btn-secondary.mr-1 Edit  

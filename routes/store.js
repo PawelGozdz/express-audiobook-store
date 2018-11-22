@@ -6,9 +6,16 @@ const storeController = require('../controllers/store');
 
 const router = express.Router();
 
-// router.get('/', storeController.getIndex);
+router.get('/', storeController.getIndex);
 
-// router.get('/audiobooks', storeController.getAudiobooks);
+router.get('/audiobooks', storeController.getAudiobooks);
 
+router.get('/audiobooks/:audiobookId', storeController.getAudiobook);
+
+router.get('/cart', storeController.getCart);
+
+router.post('/cart', storeController.postCart);
+
+router.post('/cart-delete-item', storeController.postCartDeleteAudiobook);
 
 module.exports = router;

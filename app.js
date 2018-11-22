@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const sequelize = require('./util/database');
 const Audiobook = require('./models/audiobook');
 const User = require('./models/user');
+const Cart = require('./models/cart');
+const CartItem = require('./models/cart-item');
 
 const app = express();
 
@@ -13,26 +15,31 @@ app.set('view engine', 'pug');
 app.set('views', 'views');
 
 const adminRoutes = require('./routes/admin');
+const storeRoutes = require('./routes/store');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Store user in req, so it can be used anywhere in an app
 // The user from User obj from the DB, is an object with all 'sequelize' methods associated
-app.use((req, res, next) => {
+app.use('/', (req, res, next) => {
   User.findById(1)
     .then((user) => {
       req.user = user;
-      // console.log('USER', user);
       next();
     })
     .catch(err => console.log(err));
 });
 
 app.use('/admin', adminRoutes);
+app.use(storeRoutes);
 
 Audiobook.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Audiobook);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Audiobook, { through: CartItem });
+Audiobook.belongsToMany(Cart, { through: CartItem });
 
 sequelize
   // .sync({ force: true })
@@ -46,11 +53,9 @@ sequelize
     }
     return user;
   })
-  // .then(user => {
-  //   // console.log(user);
-  //   return user.createCart();
-  // })
+  .then(user => user.createCart())
   .then((cart) => {
+    
     app.listen(3000);
   })
   .catch(err => console.log(err));

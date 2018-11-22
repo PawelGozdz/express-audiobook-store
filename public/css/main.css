@@ -1,7 +1,19 @@
+[class*="display-"] {
+  word-wrap: break-word;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
 body {
   min-height: 100vh;
   position: relative;
   padding-bottom: 3rem;
+}
+
+.active {
+  background-color: skyblue;
 }
 
 .article__card {
@@ -10,6 +22,16 @@ body {
 }
 .card-img-top {
   max-height: 8rem;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body > *:last-child {
+  /* margin-top: auto; */
+  margin-top: auto;
 }
 
 .footer {

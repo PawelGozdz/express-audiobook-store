@@ -31,6 +31,10 @@ const Audiobook = sequelize.define('audiobook', {
   description: {
     type: Sequelize.STRING,
     allowNull: false
+  },
+  category: {
+    type: Sequelize.STRING,
+    allowNull: false
   }
 });
 

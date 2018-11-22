@@ -14,13 +14,15 @@ exports.postAddAudiobook = (req, res, next) => {
   const { price } = req.body;
   const { description } = req.body;
   const { author } = req.body;
+  const { category } = req.body;
   // createAudiobook() has been added by Sequelize when association was added in app.js. Automatically adds userId to createProduct query
   req.user.createAudiobook({
     title,
     price,
     imageUrl,
     description,
-    author
+    author,
+    category
     // userId: req.user.id  
   })
     .then((results) => {
@@ -59,6 +61,7 @@ exports.postEditAudiobook = (req, res, next) => {
   const newImageUrl = req.body.imageUrl;
   const newDesc = req.body.description;
   const newAuthor = req.body.author;
+  const newCategory = req.body.category;
   Audiobook.findById(audiobookId)
     .then((audiobook) => {
       audiobook.title = newTitle;
@@ -66,6 +69,7 @@ exports.postEditAudiobook = (req, res, next) => {
       audiobook.description = newDesc;
       audiobook.price = newPrice;
       audiobook.author = newAuthor;
+      audiobook.category = newCategory;
       return audiobook.save();
     })
     .then((result) => {
