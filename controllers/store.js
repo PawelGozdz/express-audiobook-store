@@ -103,3 +103,39 @@ exports.postCartDeleteAudiobook = (req, res, next) => {
     .then(cart => res.redirect('/cart'))
     .catch(err => console.log(err));
 };
+
+exports.postOrder = (req, res, next) => {
+  let fetchedCart;
+  let audiobooks;
+  req.user.getCart()
+    .then((cart) => {
+      fetchedCart = cart;
+      return cart.getAudiobooks();
+    })
+    .then((audiobks) => {
+      audiobooks = audiobks;
+      return req.user.createOrder();
+    })
+    .then((order) => {
+      return order.addAudiobooks(audiobooks.map((audiobook) => {
+        // Name must be the same as the 'order-item' model
+        audiobook.orderItem = { quantity: audiobook.cartItem.quantity };
+        return audiobook;
+      }));
+    })
+    .then(result => fetchedCart.setAudiobooks(null))
+    .then(result => res.redirect('/orders'))
+    .catch(err => console.log(err));
+};
+
+exports.getOrders = (req, res, next) => {
+  req.user.getOrders({ include: ['audiobooks'] })
+    .then((orders) => {
+      res.render('store/orders', {
+        path: '/orders',
+        pageTitle: 'Your Orders',
+        orders
+      });
+    })
+    .catch(err => console.log(err));
+};

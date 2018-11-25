@@ -8,6 +8,8 @@ const Audiobook = require('./models/audiobook');
 const User = require('./models/user');
 const Cart = require('./models/cart');
 const CartItem = require('./models/cart-item');
+const Order = require('./models/order');
+const OrderItem = require('./models/order-item');
 
 const app = express();
 
@@ -40,6 +42,10 @@ User.hasOne(Cart);
 Cart.belongsTo(User);
 Cart.belongsToMany(Audiobook, { through: CartItem });
 Audiobook.belongsToMany(Cart, { through: CartItem });
+Order.belongsTo(User);
+User.hasMany(Order);
+Order.belongsToMany(Audiobook, { through: OrderItem });
+Audiobook.belongsToMany(Order, { through: OrderItem });
 
 sequelize
   // .sync({ force: true })

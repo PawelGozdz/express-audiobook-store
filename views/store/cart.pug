@@ -4,22 +4,25 @@ block content
   main
     section.container
       h1.display-4.my-2.my-md-3 #{pageTitle}
-
+      hr
+      
       .row
         .col.col-md-8
+          - let totalOrder = 0;
           if (audiobooks.length > 0)
             ul.list-group.list-group-flush
               each audiobook in audiobooks
+                - totalOrder += audiobook.price * audiobook.cartItem.quantity ;
                 li.list-group-item.d-flex.justify-content-between.align-items-center= audiobook.title
                   span.badge.badge-primary.badge-pill.ml-3= audiobook.cartItem.quantity 
                   form(action="cart-delete-item", method="POST").ml-auto
                     input(type="hidden", value=audiobook.id, name="audiobookId")
                     button(type="submit").btn.btn-warning Remove
+            .text-right.list-group-item
+              br
+              form(action="/create-order", method="POST")
+                .form-group
+                  strong.d-inline-block.mr-4 Total Value = £ #{ totalOrder || 0 }
+                  button(type="submit").btn.btn-primary Process your order
           else
             p Your Cart is empty
-
-        .col.col-md-4
-          if (audiobooks.length > 0)
-            p Total Value = XX
-          else 
-            p Total Value = 0

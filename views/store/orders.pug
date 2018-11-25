@@ -1,0 +1,37 @@
+extends ../layouts/main-layout.pug
+
+block content
+  main
+    section.container
+      h1.display-4.my-2.my-md-3 #{pageTitle}
+
+      .row
+        .col.col-md-8
+          if (orders.length > 0)
+            each order, index in orders
+              ul.list-group-flush
+                li.list-group-item
+                - const date= order.createdAt;
+                  p Order ID:
+                    strong  #{ order.id }
+                    span.ml-4 Placed:
+                    strong  #{ date.getDate() + '-' + (date.getMonth()+1) + '-' + date.getFullYear() }
+                  ul.list-group-flush
+                    - let totalOrder = 0;
+                    each audiobook, i in order.audiobooks
+                      - totalOrder += audiobook.price * audiobook.orderItem.quantity ;
+                      li.d-flex
+                        span.d-inline-block #{ audiobook.title }
+                        span.d-inline-block.ml-auto Qty ( #{ audiobook.orderItem.quantity } )
+                        span.d-inline-block.ml-4 £ #{ audiobook.price * audiobook.orderItem.quantity }
+                  p.d-block.mt-2.text-right Amount Payed: 
+                    strong.ml-2 £ #{ totalOrder }
+
+          else
+            .form-group
+              h2.d-inline-block.mr-3.mb-0.align-middle You have no orders!
+              a(href="/audiobooks").btn.btn-warning Check our offer!
+
+                
+
+            
