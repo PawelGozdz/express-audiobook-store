@@ -15,7 +15,7 @@ block content
                   p Order ID:
                     strong  #{ order.id }
                     span.ml-4 Placed:
-                    strong  #{ date.getDate() + '-' + (date.getMonth()+1) + '-' + date.getFullYear() }
+                    strong  #{ date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() }
                   ul.list-group-flush
                     - let totalOrder = 0;
                     each audiobook, i in order.audiobooks
@@ -24,7 +24,7 @@ block content
                         span.d-inline-block #{ audiobook.title }
                         span.d-inline-block.ml-auto Qty ( #{ audiobook.orderItem.quantity } )
                         span.d-inline-block.ml-4 £ #{ audiobook.price * audiobook.orderItem.quantity }
-                  p.d-block.mt-2.text-right Amount Payed: 
+                  p.d-block.mt-2.text-right Amount Paid: 
                     strong.ml-2 £ #{ totalOrder }
 
           else

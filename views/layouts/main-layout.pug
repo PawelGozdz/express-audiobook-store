@@ -21,7 +21,10 @@ html(lang="en")
             li.nav-item
               a(href="/cart", class=(path === '/cart' ? 'active' : '')).nav-link Cart
             li.nav-item
+              a(href="/orders", class=(path === '/orders' ? 'active' : '')).nav-link Orders
+            li.nav-item
               a(href="/admin/audiobooks", class=(path === '/admin/audiobooks' ? 'active' : '')).nav-link Admin Audiobooks
+            //- if (req.isLoggedIn)
             li.nav-item
               a(href="/admin/add-audiobook", class=(path === '/admin/add-audiobook' ? 'active' : '')).nav-link Add Audiobooks
 
