@@ -1,0 +1,26 @@
+extends ../layouts/main-layout.pug
+
+block content
+  main
+    section.container
+      h1.display-4.my-2.my-md-3 #{pageTitle}
+
+      form(action="/login", method="POST")
+        button(type="submit") submit
+
+      .row
+        .col.col-sm-0.col-md-3
+        .col.col-md-6
+          form(action="")
+            label Email
+            input(type="email").form-control
+            label Password
+            input(type="password").form-control
+            button(type="submit").btn.btn-primary Submit
+        .col.col-sm-0.col-md-3
+          
+      
+
+                
+
+            

@@ -14,7 +14,8 @@ block content
               each audiobook in audiobooks
                 - totalOrder += audiobook.price * audiobook.cartItem.quantity ;
                 li.list-group-item.d-flex.justify-content-between.align-items-center= audiobook.title
-                  span.badge.badge-primary.badge-pill.ml-3= audiobook.cartItem.quantity 
+                  span.badge.badge-primary.badge-pill.mx-3= audiobook.cartItem.quantity
+                  |( £ #{audiobook.price * audiobook.cartItem.quantity} )
                   form(action="cart-delete-item", method="POST").ml-auto
                     input(type="hidden", value=audiobook.id, name="audiobookId")
                     button(type="submit").btn.btn-warning Remove

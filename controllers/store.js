@@ -6,7 +6,8 @@ exports.getAudiobooks = (req, res, next) => {
       res.render('store/audiobook-list', {
         audiobooks,
         pageTitle: 'Check Our Audiobooks',
-        path: '/audiobooks'
+        path: '/audiobooks',
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
@@ -19,7 +20,8 @@ exports.getAudiobook = (req, res, next) => {
       res.render('store/audiobook-detail', {
         audiobook,
         pageTitle: audiobook.title,
-        path: '/audiobooks'
+        path: '/audiobooks',
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
@@ -36,13 +38,15 @@ exports.getIndex = (req, res, next) => {
         audiobooks,
         sortNewest,
         pageTitle: 'Audiobooks.pl - Online Store',
-        path: '/'
+        path: '/',
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
 };
 
 exports.getCart = (req, res, next) => {
+  // console.log("RRRRRRRRRRRRRRRRRR", req.user);
   req.user.getCart()
     .then((cart) => {
       return cart
@@ -51,7 +55,8 @@ exports.getCart = (req, res, next) => {
           res.render('store/cart', {
             path: '/cart',
             pageTitle: 'Your Cart',
-            audiobooks
+            audiobooks,
+            isAuthenticated: req.session.isLoggedIn
           });
         })
         .catch(err => console.log(err));
@@ -79,7 +84,7 @@ exports.postCart = (req, res, next) => {
 
       return Audiobook.findById(audiobookId);
     })
-    .then((audiobook) => {  
+    .then((audiobook) => {
       return fetchedCart.addAudiobook(audiobook, {
         through: { quantity: newQty }
       });
@@ -134,7 +139,8 @@ exports.getOrders = (req, res, next) => {
       res.render('store/orders', {
         path: '/orders',
         pageTitle: 'Your Orders',
-        orders
+        orders,
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));

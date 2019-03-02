@@ -24,8 +24,9 @@ block content
                     strong.card-text £#{audiobook.price}
                   form(action="/cart", method="POST")
                     .btn-group.btn-group-sm(role="group"  )
-                      button(type="submit").btn.btn-primary Add to Cart
                       a(href=`/audiobooks/${audiobook.id}`).btn.btn-secondary Details
-                      input(type="hidden", value=audiobook.id, name="audiobookId")
+                      if (isAuthenticated)
+                        button(type="submit").btn.btn-primary Add to Cart
+                        input(type="hidden", value=audiobook.id, name="audiobookId")
           else 
             h3 No Products

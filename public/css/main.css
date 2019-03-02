@@ -1,5 +1,16 @@
-[class*="display-"] {
+  [class*="display-"] {
   word-wrap: break-word;
+}
+
+/* a, button {
+  color: darkblue;
+} */
+
+nav button {
+  color: #007bff;
+  border: none;
+  background: inherit;
+  cursor: pointer
 }
 
 a:hover {

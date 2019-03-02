@@ -4,7 +4,8 @@ exports.getAddAudiobook = (req, res, next) => {
   res.render('admin/edit-audiobook', {
     pageTitle: 'Add Audiobook',
     path: '/admin/add-audiobook',
-    editing: false
+    editing: false,
+    isAuthenticated: req.session.isLoggedIn
   });
 };
 
@@ -48,7 +49,8 @@ exports.getEditAudiobook = (req, res, next) => {
         pageTitle: 'Edit Audiobook',
         path: '/admin/edit-audiobook',
         editing: editMode,
-        audiobook
+        audiobook,
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
@@ -86,7 +88,8 @@ exports.getAudiobooks = (req, res, next) => {
       res.render('admin/audiobooks', {
         audiobooks,
         pageTitle: 'Admin Audiobooks',
-        path: '/admin/audiobooks'
+        path: '/admin/audiobooks',
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
