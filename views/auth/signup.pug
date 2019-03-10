@@ -1,0 +1,35 @@
+extends ../layouts/main-layout.pug
+
+block content
+  main
+    section.jumbotron.jumbotron-fluid
+      .container
+        h1.display-4 #{pageTitle}
+        hr.my-2
+        p.lead Login and enojoy houndreds of amazing stories
+
+    .row
+      .col.col-sm-0.col-md-3
+      .col.col-md-6
+        if (errorMessage)
+          p= errorMessage
+        form(action='/signup', method='POST').login-form
+          div
+            label(for='email') E-Mail
+            input#email(type='email', name='email').form-control
+          div
+            label(for='password') Password
+            input#password(type='password', name='password').form-control
+          div
+            label(for='confirmPassword') Confirm Password
+            input#confirmPassword(type='password', name='confirmPassword').form-control
+          input(type='hidden', name='_csrf', value=(csrfToken))
+          button.btn(type='submit') Signup
+
+      .col.col-sm-0.col-md-3
+          
+      
+
+                
+
+            

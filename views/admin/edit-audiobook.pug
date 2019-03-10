@@ -30,5 +30,6 @@ block content
                 input(type="hidden", value=(audiobook.id), name="audiobookId")
               - const status = editing ? 'Edit' : 'Add Audiobook';
               button.btn(type="submit")= status
+            input(type='hidden', name='_csrf', value=(csrfToken))
         .col-12.col-md-3
 

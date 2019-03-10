@@ -18,6 +18,7 @@ block content
                   |( £ #{audiobook.price * audiobook.cartItem.quantity} )
                   form(action="cart-delete-item", method="POST").ml-auto
                     input(type="hidden", value=audiobook.id, name="audiobookId")
+                    input(type='hidden', name='_csrf', value=(csrfToken))
                     button(type="submit").btn.btn-warning Remove
             .text-right.list-group-item
               br
@@ -25,5 +26,6 @@ block content
                 .form-group
                   strong.d-inline-block.mr-4 Total Value = £ #{ totalOrder || 0 }
                   button(type="submit").btn.btn-primary Process your order
+                input(type='hidden', name='_csrf', value=(csrfToken))
           else
             p Your Cart is empty

@@ -4,12 +4,19 @@ exports.getAddAudiobook = (req, res, next) => {
   res.render('admin/edit-audiobook', {
     pageTitle: 'Add Audiobook',
     path: '/admin/add-audiobook',
-    editing: false,
-    isAuthenticated: req.session.isLoggedIn
+    editing: false
+  });
+};
+
+exports.getUser = (req, res, next) => {
+  res.render('admin/user', {
+    path: '/user',
+    pageTitle: 'User page'
   });
 };
 
 exports.postAddAudiobook = (req, res, next) => {
+  console.log(req);
   const { title } = req.body;
   const { imageUrl } = req.body;
   const { price } = req.body;
@@ -17,6 +24,7 @@ exports.postAddAudiobook = (req, res, next) => {
   const { author } = req.body;
   const { category } = req.body;
   // createAudiobook() has been added by Sequelize when association was added in app.js. Automatically adds userId to createProduct query
+  // console.log('requsrssssssssssssssssss', req.user);
   req.user.createAudiobook({
     title,
     price,
@@ -27,6 +35,7 @@ exports.postAddAudiobook = (req, res, next) => {
     // userId: req.user.id  
   })
     .then((results) => {
+      // console.log('resssssssssssssssssss', results);
       res.redirect('/admin/audiobooks');
     })
     .catch(err => console.log(err));
@@ -49,8 +58,7 @@ exports.getEditAudiobook = (req, res, next) => {
         pageTitle: 'Edit Audiobook',
         path: '/admin/edit-audiobook',
         editing: editMode,
-        audiobook,
-        isAuthenticated: req.session.isLoggedIn
+        audiobook
       });
     })
     .catch(err => console.log(err));
@@ -66,30 +74,36 @@ exports.postEditAudiobook = (req, res, next) => {
   const newCategory = req.body.category;
   Audiobook.findById(audiobookId)
     .then((audiobook) => {
+      if (audiobook.userEmail.toString() !== req.user.email.toString()) {
+        return res.redirect('/');
+      }
       audiobook.title = newTitle;
       audiobook.imageUrl = newImageUrl;
       audiobook.description = newDesc;
       audiobook.price = newPrice;
       audiobook.author = newAuthor;
       audiobook.category = newCategory;
-      return audiobook.save();
-    })
-    .then((result) => {
-      console.log('PRODUCT HAS BEEN UPDATED!');
-      res.redirect('/admin/audiobooks');
+      return audiobook
+        .save()
+        .then((result) => {
+          console.log('PRODUCT HAS BEEN UPDATED!');
+          res.redirect('/admin/audiobooks');
+        })
     })
     .catch(err => console.log(err));
 };
 
 exports.getAudiobooks = (req, res, next) => {
-  req.user.getAudiobooks()
+  req.user.getAudiobooks({
+    options: { email: req.user.email }
+  })
+  // req.user.getAudiobooks()
   // Audiobook.findAll()
     .then((audiobooks) => {
       res.render('admin/audiobooks', {
         audiobooks,
         pageTitle: 'Admin Audiobooks',
-        path: '/admin/audiobooks',
-        isAuthenticated: req.session.isLoggedIn
+        path: '/admin/audiobooks'
       });
     })
     .catch(err => console.log(err));
@@ -97,7 +111,8 @@ exports.getAudiobooks = (req, res, next) => {
 
 exports.postDeleteAudiobook = (req, res, next) => {
   const { audiobookId } = req.body;
-  Audiobook.findById(audiobookId)
+  Audiobook
+    .findById(audiobookId)
     .then(audiobook => audiobook.destroy())
     .then((result) => {
       console.log('PRODUCT DESTROYED');

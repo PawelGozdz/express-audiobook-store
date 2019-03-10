@@ -28,5 +28,6 @@ block content
                       if (isAuthenticated)
                         button(type="submit").btn.btn-primary Add to Cart
                         input(type="hidden", value=audiobook.id, name="audiobookId")
+                    input(type='hidden', name='_csrf', value=(csrfToken))
           else 
             h3 No Products

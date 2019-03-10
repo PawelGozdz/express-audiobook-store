@@ -6,8 +6,7 @@ exports.getAudiobooks = (req, res, next) => {
       res.render('store/audiobook-list', {
         audiobooks,
         pageTitle: 'Check Our Audiobooks',
-        path: '/audiobooks',
-        isAuthenticated: req.session.isLoggedIn
+        path: '/audiobooks'
       });
     })
     .catch(err => console.log(err));
@@ -20,8 +19,7 @@ exports.getAudiobook = (req, res, next) => {
       res.render('store/audiobook-detail', {
         audiobook,
         pageTitle: audiobook.title,
-        path: '/audiobooks',
-        isAuthenticated: req.session.isLoggedIn
+        path: '/audiobooks'
       });
     })
     .catch(err => console.log(err));
@@ -38,8 +36,7 @@ exports.getIndex = (req, res, next) => {
         audiobooks,
         sortNewest,
         pageTitle: 'Audiobooks.pl - Online Store',
-        path: '/',
-        isAuthenticated: req.session.isLoggedIn
+        path: '/'
       });
     })
     .catch(err => console.log(err));
@@ -55,8 +52,7 @@ exports.getCart = (req, res, next) => {
           res.render('store/cart', {
             path: '/cart',
             pageTitle: 'Your Cart',
-            audiobooks,
-            isAuthenticated: req.session.isLoggedIn
+            audiobooks
           });
         })
         .catch(err => console.log(err));
@@ -102,8 +98,8 @@ exports.postCartDeleteAudiobook = (req, res, next) => {
       return cart.getAudiobooks({ where: { id: audiobookId } });
     })
     .then((audiobooks) => {
-      const audiobook = audiobooks[0];
-      return audiobook.cartItem.destroy();
+      // const audiobook = audiobooks[0];
+      return audiobooks[0].cartItem.destroy();
     })
     .then(cart => res.redirect('/cart'))
     .catch(err => console.log(err));
@@ -139,8 +135,7 @@ exports.getOrders = (req, res, next) => {
       res.render('store/orders', {
         path: '/orders',
         pageTitle: 'Your Orders',
-        orders,
-        isAuthenticated: req.session.isLoggedIn
+        orders
       });
     })
     .catch(err => console.log(err));

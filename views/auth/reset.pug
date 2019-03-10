@@ -6,21 +6,18 @@ block content
       .container
         h1.display-4 #{pageTitle}
         hr.my-2
-        p.lead Login and enojoy houndreds of amazing stories
+        p.lead Forgot your password? No problem. Get a new one!
 
     .row
       .col.col-sm-0.col-md-3
       .col.col-md-6
         if (errorMessage)
           p= errorMessage
-        form(action="/login", method="POST")
+        form(action="/reset", method="POST")
           label Email
           input(type="email", name="email").form-control
-          label Password
-          input(type="password", name="password").form-control
           input(type='hidden', name='_csrf', value=(csrfToken))
-          button(type="submit").btn.btn-primary.mt-3 Submit
-          p.mt-4.text-right #[a(href="/reset") Forgot Password]
+          button(type="submit").btn.btn-primary.mt-3 Reset Password
       .col.col-sm-0.col-md-3
           
       
