@@ -172,7 +172,6 @@ exports.getNewPassword = (req, res, next) => {
       }
     })
     .then((user) => {
-      console.log('USERRRRRRRRRRRRRRR', user);
       let message = req.flash('error');
       if (message.length > 0) {
         message = message[0];
@@ -222,6 +221,64 @@ exports.postNewPassword = (req, res, next) => {
     .then(result => res.redirect('/login'))
     .catch(err => console.log(err));
 };
-// .then(user => user.createCart())
+
+exports.postUpdatePassword = (req, res, next) => {
+  const { newPassword } = req.body;
+  const { confirmPassword } = req.body;
+  let updateUser;
+
+  if (newPassword.length === 0) {
+    return res.redirect('/admin/user');
+  }
+
+  User.findOne({
+    where: {
+      id: req.body.userId
+    }
+  })
+    .then((user) => {
+      updateUser = user;
+      return bcrypt.hash(newPassword, 12);
+    })
+    .then((hashedPassword) => {
+      updateUser.password = hashedPassword;
+      return updateUser.save();
+    })
+    .then(() => {
+      res.redirect('/admin/user');
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postUpdateEmail = (req, res, next) => {
+  const { newEmail } = req.body;
+  const { confirmEmail } = req.body;
+  let updateUser;
+
+  if (newEmail.length === 0) {
+    return res.redirect('/admin/user');
+  }
+
+  
+  User.findOne({
+    where: {
+      id: req.body.userId
+    }
+  })
+  .then((user) => {
+    console.log(user.email);
+    updateUser = user;
+    
+    updateUser.email = newEmail;
+    console.log(updateUser);
+    
+      // console.log('****************************', updateUser);
+      return updateUser.save();
+    })
+    .then(() => {
+      res.redirect('/admin/user');
+    })
+    .catch(err => console.log(err));
+};
 
 // {"cookie":{"originalMaxAge":null,"expires":null,"httpOnly":true,"path":"/"},"isLoggedIn":true,"user":{"id":1,"name":"Pawel","email":"test@test.com","createdAt":"2018-11-24T22:16:32.000Z","updatedAt":"2018-11-24T22:16:32.000Z"}}

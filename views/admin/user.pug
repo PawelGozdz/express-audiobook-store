@@ -4,23 +4,36 @@ block content
   main
     section.container.text-center
       h1.my-3.my-md-4 #{pageTitle}
+      p= user.email
       hr
-      .row.justify-content-center
-        //- if audiobooks.length > 0
-          each audiobook in audiobooks
-            .col-8.col-sm-6.col-md-4.col-lg-3.my-2.my-lg-3
-              article.card.article__card.text-center
-                img(src=audiobook.imageUrl alt=audiobook.title).card-img-top
-                .card-body
-                  h5.card-title #{audiobook.title}
-                  p.card-text #{audiobook.author}
-                  p.card-text #{audiobook.description}
-                  p.card-text #{audiobook.category}
-                  p.card-text £#{audiobook.price}
-                  form(action="/admin/delete-audiobook", method="POST")
-                    a(href=`/admin/edit-audiobook/${audiobook.id}?edit=true`).btn.btn-secondary.mr-1 Edit  
-                    input(type="hidden", value=audiobook.id, name="audiobookId")
-                    input(type='hidden', name='_csrf', value=csrfToken)
-                    button(type="submit").btn.btn-danger Delete
-        //- else 
-          h2 No Products
+      .row
+        .col-md-4.ml-md-auto
+          p.d-flex.justify-content-between 
+        .col-md-4.ml-md-auto
+          p.d-flex.justify-content-between
+            //- span Email
+            //- strong= user.email
+            a(data-toggle='collapse', href='#collapse1', role='button', aria-expanded='false', aria-controls='collapse1') Password Change
+          #collapse1.collapse
+            form(action="/updatepassword", method="POST")
+              label Insert a new password
+              input(type="password", name="newPassword").form-control
+              label Confirm a new password
+              input(type="password", name="confirmPassword").form-control
+              input(type='hidden', name='_csrf', value=(csrfToken))
+              input(type='hidden', name='userId', value=(user.id))
+              button(type="submit").btn.btn-primary.mt-3 Confirm new Password
+          
+          //- p.d-flex.justify-content-between
+            a(data-toggle='collapse', href='#collapse2', role='button', aria-expanded='false', aria-controls='collapse2') Email Change
+          //- #collapse2.collapse
+            form(action="/updateemail", method="POST")
+              label Insert a new email
+              input(type="email", name="newEmail").form-control
+              label Confirm a new Email
+              input(type="email", name="confirmEmail").form-control
+              input(type='hidden', name='_csrf', value=(csrfToken))
+              input(type='hidden', name='userId', value=(user.id))
+              button(type="submit").btn.btn-primary.mt-3 Confirm new Email      
+
+

@@ -1,4 +1,5 @@
 const Audiobook = require('../models/audiobook');
+const User = require('../models/user');
 
 exports.getAddAudiobook = (req, res, next) => {
   res.render('admin/edit-audiobook', {
@@ -11,7 +12,8 @@ exports.getAddAudiobook = (req, res, next) => {
 exports.getUser = (req, res, next) => {
   res.render('admin/user', {
     path: '/user',
-    pageTitle: 'User page'
+    pageTitle: 'User page',
+    user: req.user
   });
 };
 
