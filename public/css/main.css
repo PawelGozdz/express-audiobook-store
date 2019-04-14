@@ -54,3 +54,7 @@ body {
 .footer p {
   margin-bottom: 0;
 }
+
+.invalid {
+  border: 1px solid red;
+}

@@ -3,33 +3,61 @@ extends ../layouts/main-layout.pug
 block content
   main
     .container
+      if (errorMessage)
+        p= errorMessage
       .row
         .col-12.col-md-3
         .col.col-md-6
-          form.product-form(action=`/admin/${editing ? 'edit' : 'add'}-audiobook`, method="POST")
+          form.product-form(action=`/admin/${editing ? 'edit' : hasError ? 'add' : 'edit'}-audiobook`, method="POST")
             .form-group
               label(for="title") Title
-              input(type="text", name="title" value=(editing ? audiobook.title : '')).form-control#title
+              input(
+                class=(validationErrors.find(e => e.param === 'title') ? 'invalid' : '')
+                type="text", 
+                name="title" 
+                value=((editing || hasError) ? audiobook.title : '')).form-control#title
             .form-group
               label(for="imageUrl") Image Url
-              input(type="text", name="imageUrl" value=(editing ? audiobook.imageUrl : '')).form-control#imageUrl
+              input(
+                class=(validationErrors.find(e => e.param === 'imageUrl') ? 'invalid' : '')
+                type="text", 
+                name="imageUrl", 
+                value=((editing || hasError) ? audiobook.imageUrl : '')).form-control#imageUrl
             .form-group
               label(for="author") Author
-              input(type="text", name="author" value=(editing ? audiobook.author : '')).form-control#author
+              input(
+                class=(validationErrors.find(e => e.param === 'author') ? 'invalid' : '')
+                type="text",
+                name="author",
+                value=((editing || hasError) ? audiobook.author : '')).form-control#author
             .form-group
               label(for="category") Category
-              input(type="text", name="category" value=(editing ? audiobook.category : '')).form-control#category
+              input(
+                class=(validationErrors.find(e => e.param === 'category') ? 'invalid' : '')
+                type="text",
+                name="category", 
+                value=((editing || hasError) ? audiobook.category : '')).form-control#category
             .form-group
               label(for="price") Price
-              input(type="number", step="0.01",  name="price" value=(editing ? audiobook.price : '')).form-control#price
+              input(
+                class=(validationErrors.find(e => e.param === 'price') ? 'invalid' : '')
+                type="number", step="0.01",
+                name="price" value=((editing || hasError) ? audiobook.price : '')).form-control#price
             .form-group
               label(for="description") Description
-              - const textArea = editing ? audiobook.description : '';
-              textarea.form-control(name="description", rows="3", id="description")= textArea
-              if (editing)
-                input(type="hidden", value=(audiobook.id), name="audiobookId")
-              - const status = editing ? 'Edit' : 'Add Audiobook';
-              button.btn(type="submit")= status
+              - const textArea = (editing || hasError) ? audiobook.description : '';
+              textarea.form-control(
+                class=(validationErrors.find(e => e.param === 'description') ? 'invalid' : '')
+                name="description", rows="3", 
+                id="description")= textArea
+            if (editing)
+              input(
+                  type="hidden", 
+                value=(audiobook.id), name="audiobookId")
+            - const status = editing ? 'Edit' : 'Add Audiobook';
+            button.btn(type="submit")= status
             input(type='hidden', name='_csrf', value=(csrfToken))
+            //- input(type='hidden', name='audiobookId', value=((editing || hasError) ? audiobook.id : '')))
+            input(type='hidden', name='email', value=((editing || hasError) ? audiobook.email : ''))
         .col-12.col-md-3
 
