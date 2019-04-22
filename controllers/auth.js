@@ -344,19 +344,66 @@ exports.postUpdatePassword = (req, res, next) => {
   let updateUser;
   const errors = validationResult(req);
 
+  let user = req.user;
+  let audiobooks;
+  let cart;
+  let orders;
+
+  const promise =  new Promise((resolve, reject) => {
+    resolve();
+  })
+
   if (!errors.isEmpty()) {
-    console.log(errors.array());
-    return res.status(422).render('admin/user', {
-      path: '/user',
-      pageTitle: 'User settings',
-      errorMessage: errors.array()[0].msg,
-      user: req.user,
-      oldInput: {
-        password,
-        confirmPassword: req.body.confirmPassword
-      },
-      validationErrors: errors.array()
-    });
+    console.log('+++++', errors.array());
+
+    promise
+      .then(() => {
+        return req.user.getAudiobooks({
+          options: { email: req.user.email }
+        })
+      })
+    // Query a list with User's audiobooks
+      .then((dbAudiobooks) => {
+        audiobooks = dbAudiobooks;
+        // Query cart
+        return req.user.getCart({ include: ['audiobooks'] })
+      })
+      .then((dbCart) => {
+        cart = dbCart;
+        return req.user.getOrders({ include: ['audiobooks'] });
+      })
+      .then((dbOrders) => {
+        orders = dbOrders;
+        
+        return res.render('admin/user', {
+          path: '/user',
+          pageTitle: 'User dashboard',
+          errorMessage: errors.array()[0].msg,
+          user,
+          audiobooks,
+          cart,
+          orders,
+          oldInput: {
+            password,
+            confirmPassword: req.body.confirmPassword
+          },
+          validationErrors: errors.array()
+        });
+      })
+    // return res.status(422).render('admin/user', {
+    //   path: '/user',
+    //   pageTitle: 'User settings',
+    //   errorMessage: errors.array()[0].msg,
+    //   user: req.user,
+    //   audiobooks: [],
+    //   cart: '',
+    //   orders: [],
+    //   oldInput: {
+    //     password,
+    //     confirmPassword: req.body.confirmPassword
+    //   },
+    //   validationErrors: errors.array()
+    // });
   }
 
   // if (password.length === 0) {
@@ -377,18 +424,55 @@ exports.postUpdatePassword = (req, res, next) => {
       return updateUser.save();
     })
     .then(() => {
+      return req.user.getAudiobooks({
+        options: { email: req.user.email }
+      })
+    })
+  // Query a list with User's audiobooks
+    .then((dbAudiobooks) => {
+      audiobooks = dbAudiobooks;
+      // Query cart
+      return req.user.getCart({ include: ['audiobooks'] })
+    })
+    .then((dbCart) => {
+      cart = dbCart;
+      return req.user.getOrders({ include: ['audiobooks'] });
+    })
+    .then((dbOrders) => {
+      orders = dbOrders;
+      
       return res.render('admin/user', {
         path: '/user',
-        pageTitle: 'User settings',
-        errorMessage: 'Password updated!',
-        user: req.user,
+        pageTitle: 'User dashboard',
+        errorMessage: 'Password Updated!',
+        user,
+        audiobooks,
+        cart,
+        orders,
         oldInput: {
-          password,
-          confirmPassword: req.body.confirmPassword
+          password: '',
+          confirmPassword: ''
+          // confirmPassword: req.body.confirmPassword
         },
         validationErrors: []
       });
     })
+    // .then(() => {
+    //   return res.render('admin/user', {
+    //     path: '/user',
+    //     pageTitle: 'User settings',
+    //     errorMessage: 'Password updated!',
+    //     user: req.user,
+    //     audiobooks: [],
+    //     cart: '',
+    //     orders: [],
+    //     oldInput: {
+    //       password,
+    //       confirmPassword: req.body.confirmPassword
+    //     },
+    //     validationErrors: []
+    //   });
+    // })
     .catch(err => console.log(err));
 };
 

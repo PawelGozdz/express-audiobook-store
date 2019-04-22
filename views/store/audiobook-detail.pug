@@ -16,7 +16,7 @@ block content
                 strong.card-text £#{audiobook.price}
               form(action="/cart", method="POST")
                 .btn-group.btn-group-sm(role="group")
-                  a(href='/').btn.btn-secondary <- Return
+                  //- a(href='/').btn.btn-secondary <- Return
                   if (isAuthenticated)
                     button(type="submit").btn.btn-primary Add to Cart
                     input(type="hidden", value=audiobook.id, name="audiobookId")

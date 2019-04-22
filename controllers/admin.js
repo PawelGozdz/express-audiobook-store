@@ -1,6 +1,7 @@
 const Audiobook = require('../models/audiobook');
 const User = require('../models/user');
 const { validationResult } = require('express-validator/check');
+const { Op } = require('sequelize');
 
 exports.getAddAudiobook = (req, res, next) => {
   console.log('GET ADD AUDIOBOOK', req.body);
@@ -24,18 +25,55 @@ exports.getAddAudiobook = (req, res, next) => {
 };
 
 exports.getUser = (req, res, next) => {
-  // const errors = validationResult(req);
-  res.render('admin/user', {
-    path: '/user',
-    pageTitle: 'User page',
-    user: req.user,
-    oldInput: {
-      password: '',
-      confirmPassword: ''
-      // confirmPassword: req.body.confirmPassword
-    },
-    validationErrors: []
-  });
+  let user = req.user;
+  let audiobooks;
+  let cart;
+  let orders;
+
+  const promise =  new Promise((resolve, reject) => {
+    resolve();
+  })
+    .then(() => {
+      return req.user.getAudiobooks({
+        options: { email: req.user.email }
+      })
+    })
+  // Query a list with User's audiobooks
+    .then((dbAudiobooks) => {
+      audiobooks = dbAudiobooks;
+      // Query cart
+      return req.user.getCart({ include: ['audiobooks'] })
+    })
+    .then((dbCart) => {
+      cart = dbCart;
+      return req.user.getOrders({ include: ['audiobooks'] });
+    })
+    .then((dbOrders) => {
+      orders = dbOrders;
+      
+      return res.render('admin/user', {
+        path: '/user',
+        pageTitle: 'User dashboard',
+        user,
+        audiobooks,
+        cart,
+        orders,
+        oldInput: {
+          password: '',
+          confirmPassword: ''
+          // confirmPassword: req.body.confirmPassword
+        },
+        validationErrors: []
+      });
+    })
+    .catch((error) => {
+      const err = new Error('Couldn\'t find the user!. Please try again.');
+      err.httpStatusCode = 500;
+      // console.log('errrrrrrrrrrrr', error);
+      return next(err);
+    });  
+
+    
 };
 
 exports.postAddAudiobook = (req, res, next) => {
@@ -52,7 +90,6 @@ exports.postAddAudiobook = (req, res, next) => {
   // createAudiobook() has been added by Sequelize when association was added in app.js. Automatically adds userId to createProduct query
   // console.log('requsrssssssssssssssssss', req.user);
 
-  console.log('eeeeeeeee', description);
   if (!errors.isEmpty()) {
     return res.status(422).render('admin/edit-audiobook', {
       pageTitle: 'Add Audiobook',
@@ -75,7 +112,7 @@ exports.postAddAudiobook = (req, res, next) => {
     });
   }
 
-  console.log('LOOOOOOOOOOOG', title);
+  // console.log('LOOOOOOOOOOOG', title);
 
   req.user.createAudiobook({
     title,
@@ -90,7 +127,11 @@ exports.postAddAudiobook = (req, res, next) => {
       // console.log('resssssssssssssssssss', results);
       res.redirect('/admin/audiobooks');
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      const error = new Error('Something went wrong and couldn\'t save it. Please try again.');
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.getEditAudiobook = (req, res, next) => {
@@ -117,7 +158,11 @@ exports.getEditAudiobook = (req, res, next) => {
         validationErrors: []
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      const error = new Error('Something went wrong! Couldn\'t load audiobooks.');
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.postEditAudiobook = (req, res, next) => {
@@ -171,7 +216,11 @@ exports.postEditAudiobook = (req, res, next) => {
           res.redirect('/admin/audiobooks');
         })
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      const error = new Error('Couldn\'t save your changes. Please try again');
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.getAudiobooks = (req, res, next) => {
