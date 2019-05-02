@@ -40,9 +40,13 @@ body {
   flex-direction: column;
 }
 
+.card-body form {
+  margin-top: auto;
+}
+
 .card-body > *:last-child {
   /* margin-top: auto; */
-  margin-top: auto;
+  /* margin-top: auto; */
 }
 
 .footer {
@@ -57,4 +61,8 @@ body {
 
 .invalid {
   border: 1px solid red;
+}
+
+.noselect {
+  cursor: no-drop;
 }

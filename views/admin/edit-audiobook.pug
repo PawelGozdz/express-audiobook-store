@@ -4,11 +4,11 @@ block content
   main
     .container
       if (errorMessage)
-        p= errorMessage
+        p.text-center= errorMessage
       .row
         .col-12.col-md-3
         .col.col-md-6
-          form.product-form(action=`/admin/${editing ? 'edit' : hasError ? 'add' : 'edit'}-audiobook`, method="POST")
+          form.product-form(action=`/admin/${editing ? 'edit' : hasError ? 'add' : 'edit'}-audiobook`, method="POST", enctype="multipart/form-data")
             .form-group
               label(for="title") Title
               input(
@@ -17,12 +17,11 @@ block content
                 name="title" 
                 value=((editing || hasError) ? audiobook.title : '')).form-control#title
             .form-group
-              label(for="imageUrl") Image Url
+              label(for="image") Image
               input(
-                class=(validationErrors.find(e => e.param === 'imageUrl') ? 'invalid' : '')
-                type="text", 
-                name="imageUrl", 
-                value=((editing || hasError) ? audiobook.imageUrl : '')).form-control#imageUrl
+                type="file", 
+                name="image",
+                id="image").form-control
             .form-group
               label(for="author") Author
               input(
@@ -52,12 +51,11 @@ block content
                 id="description")= textArea
             if (editing)
               input(
-                  type="hidden", 
+                type="hidden",
                 value=(audiobook.id), name="audiobookId")
-            - const status = editing ? 'Edit' : 'Add Audiobook';
-            button.btn(type="submit")= status
+              //- input(type='hidden', name='email', value=((editing || hasError) ? audiobook.userEmail : ''))
+            - const status = editing ? 'Update' : 'Add Audiobook';
             input(type='hidden', name='_csrf', value=(csrfToken))
-            //- input(type='hidden', name='audiobookId', value=((editing || hasError) ? audiobook.id : '')))
-            input(type='hidden', name='email', value=((editing || hasError) ? audiobook.email : ''))
+            button.btn(type="submit")= status
         .col-12.col-md-3
 

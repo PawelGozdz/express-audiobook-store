@@ -3,6 +3,8 @@ const User = require('../models/user');
 const { validationResult } = require('express-validator/check');
 const { Op } = require('sequelize');
 
+const fileHelper = require('../util/file');
+
 exports.getAddAudiobook = (req, res, next) => {
   console.log('GET ADD AUDIOBOOK', req.body);
   res.render('admin/edit-audiobook', {
@@ -71,24 +73,43 @@ exports.getUser = (req, res, next) => {
       err.httpStatusCode = 500;
       // console.log('errrrrrrrrrrrr', error);
       return next(err);
-    });  
-
-    
+    });
 };
 
 exports.postAddAudiobook = (req, res, next) => {
-  console.log('POST ADD AUDIOBOOK', req.body);
   const email = req.user.email || req.body.email;
-	console.log("TCL: exports.postAddAudiobook -> email", email)
+  console.log("TCL: exports.postAddAudiobook -> email", email);
+  // console.log('EEEEEEEEEEEEE', req);
   const { title } = req.body;
-  const { imageUrl } = req.body;
+  const image = req.file;
   const { price } = req.body;
   const { description } = req.body;
   const { author } = req.body;
   const { category } = req.body;
+
   const errors = validationResult(req);
   // createAudiobook() has been added by Sequelize when association was added in app.js. Automatically adds userId to createProduct query
-  // console.log('requsrssssssssssssssssss', req.user);
+
+  if (!image) {
+    console.log('Not an image!', image);
+    
+    return res.status(422).render('admin/edit-audiobook', {
+      pageTitle: 'Add Audiobook',
+      path: '/admin/add-audiobook',
+      editing: false,
+      hasError: true,
+      audiobook: {
+        title,
+        price,
+        description,
+        author,
+        category,
+        email
+      },
+      errorMessage: 'Only images allowed!',
+      validationErrors: []
+    });
+  }
 
   if (!errors.isEmpty()) {
     return res.status(422).render('admin/edit-audiobook', {
@@ -98,7 +119,6 @@ exports.postAddAudiobook = (req, res, next) => {
       hasError: true,
       audiobook: {
         title,
-        imageUrl,
         price,
         description,
         author,
@@ -106,13 +126,11 @@ exports.postAddAudiobook = (req, res, next) => {
         email
       },
       errorMessage: errors.array()[0].msg,
-      // errorMessage: errors.array()[0].msg,
       validationErrors: errors.array()
-      // isAuthenticated: req.session.isLoggedIn
     });
   }
 
-  // console.log('LOOOOOOOOOOOG', title);
+  const imageUrl = image.path;
 
   req.user.createAudiobook({
     title,
@@ -170,7 +188,7 @@ exports.postEditAudiobook = (req, res, next) => {
   const { audiobookId } = req.body;
   const newTitle = req.body.title;
   const newPrice = req.body.price;
-  const newImageUrl = req.body.imageUrl;
+  const image = req.file;
   const newDesc = req.body.description;
   const newAuthor = req.body.author;
   const newCategory = req.body.category;
@@ -184,7 +202,6 @@ exports.postEditAudiobook = (req, res, next) => {
       hasError: true,
       audiobook: {
         title: newTitle,
-        imageUrl: newImageUrl,
         price: newPrice,
         description: newDesc,
         author: newAuthor,
@@ -193,7 +210,6 @@ exports.postEditAudiobook = (req, res, next) => {
       },
       errorMessage: errors.array()[0].msg,
       validationErrors: errors.array()
-      // isAuthenticated: req.session.isLoggedIn
     });
   }
 
@@ -203,12 +219,16 @@ exports.postEditAudiobook = (req, res, next) => {
         return res.redirect('/');
       }
       audiobook.title = newTitle;
-      audiobook.imageUrl = newImageUrl;
       audiobook.description = newDesc;
       audiobook.price = newPrice;
       audiobook.author = newAuthor;
       audiobook.category = newCategory;
       audiobook.id = audiobookId;
+      if (image) {
+        fileHelper.deleteFile(audiobook.imageUrl);
+        audiobook.imageUrl = image.path;
+      }
+
       return audiobook
         .save()
         .then((result) => {

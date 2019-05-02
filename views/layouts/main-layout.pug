@@ -16,8 +16,9 @@ html(lang="en")
           ul.navbar-nav.w-100
             li.nav-item
               a(href="/", class=(path === '/' ? 'active' : '')).nav-link Store
-            li.nav-item
-              a(href="/audiobooks", class=(path === '/audiobooks' ? 'active' : '')).nav-link Audiobooks
+            if (isAuthenticated)
+              li.nav-item
+                a(href="/your-library", class=(path === '/your-library' ? 'active' : '')).nav-link Your Library
             //- if (isAuthenticated)
             //-   li.nav-item
             //-     a(href="/cart", class=(path === '/cart' ? 'active' : '')).nav-link Cart

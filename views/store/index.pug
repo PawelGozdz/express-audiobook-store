@@ -16,21 +16,22 @@ block content
             .col-6.col-md-4.col-lg-3.col-xl-2.my-2.my-md-3
               article.card.article__card
                 a(href=`/audiobooks/${newAudiobook.id}`, data-toggle="popover", title=newAudiobook.description, data-content=newAudiobook.description)
-                  img(src=newAudiobook.imageUrl alt=newAudiobook.title).card-img-top
+                  img(src=(`/${newAudiobook.imageUrl}`) alt=newAudiobook.title).card-img-top
                   .card-body
                     h6.card-title #{newAudiobook.title}
                     p.card-text.mb-2 #{newAudiobook.author}
                     .btn-group.btn-group-sm(role="group")
-                     a(href=`/audiobooks/${newAudiobook.id}`).btn.btn-secondary Details
+                      a(href=`/audiobooks/${newAudiobook.id}`).btn.btn-secondary Details
 
     if (audiobooks.length > 0)  
       section.container
         h2.my-2.my-md-3 Recommended
         .row.justify-content-center
           each audiobook in audiobooks
+            //- - let isUser = userBooks.filter(ub => ub.id === audiobook.id).length === 0 ? false : true;
             .col-8.col-sm-6.col-md-4.col-lg-3.my-2.my-lg-3
               article.card.article__card.text-center
-                img(src=audiobook.imageUrl alt=audiobook.title).card-img-top
+                img(src=(`/${audiobook.imageUrl}`) alt=audiobook.title).card-img-top
                 .card-body
                   h5.card-title #{audiobook.title}
                   p.card-text #{audiobook.author}
@@ -40,10 +41,19 @@ block content
                     strong.card-text £#{audiobook.price}
                   form(action="/cart", method="POST")
                     .btn-group.btn-group-sm(role="group")
+                      //- a(href=`/audiobooks/${audiobook.id}${isUser ? '?own=true' : '' }`).btn.btn-secondary Details
                       a(href=`/audiobooks/${audiobook.id}`).btn.btn-secondary Details
                       if (isAuthenticated)
-                        button(type="submit").btn.btn-primary Add to Cart
+                        //- - const status = isUser ? 'Purchased' : 'Add to Cart';
+                        button(
+                          class=(audiobook.bookOwner ? 'noselect' : ''),
+                          type="submit",
+                          disabled=(audiobook.bookOwner ? 'disabled' : false)
+                          ).btn.btn-primary= (audiobook.bookOwner ? 'Purchased' : 'Add to Cart')
+                        //- button(type="submit").btn.btn-primary Add to Cart
                         input(type="hidden", value=audiobook.id, name="audiobookId")
                     input(type='hidden', name='_csrf', value=(csrfToken))
-          else 
-            h2 No Products
+                    //- input(type='hidden', name='own', value=(isUser === true ? 'true' : 'false'))
+    else
+      section.container
+        h2 No Products

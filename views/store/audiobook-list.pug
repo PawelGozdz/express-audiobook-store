@@ -6,28 +6,42 @@ block content
       .container
         h1.display-4 #{pageTitle}
         hr.my-2
-        p.lead Hundreds to choose from
+        p.lead Audiobooks you've added or purchased
 
-    if (audiobooks.length > 0)
+    section.container.mb-5
+      h2.my-2.my-md-3 Own Items
+
       .container
-        .row.justify-content-center
-          each audiobook in audiobooks
-            .col-8.col-sm-6.col-md-4.col-lg-3.my-2.my-lg-3
-              article.card.article__card.text-center
-                img(src=audiobook.imageUrl alt=audiobook.title).card-img-top
-                .card-body
-                  h5.card-title #{audiobook.title}
-                  p.card-text #{audiobook.author}
-                  p.card-text #{audiobook.description}
-                  p.text-success.card-text #{audiobook.category}
-                  p
-                    strong.card-text £#{audiobook.price}
-                  form(action="/cart", method="POST")
-                    .btn-group.btn-group-sm(role="group"  )
-                      a(href=`/audiobooks/${audiobook.id}`).btn.btn-secondary Details
-                      if (isAuthenticated)
-                        button(type="submit").btn.btn-primary Add to Cart
-                        input(type="hidden", value=audiobook.id, name="audiobookId")
-                    input(type='hidden', name='_csrf', value=(csrfToken))
-          else 
-            h3 No Products
+        if (audiobooks.length > 0)
+            .row.justify-content-center
+              each audiobook in audiobooks
+                .col-8.col-sm-6.col-md-4.col-lg-3.my-2.my-lg-3
+                  article.card.article__card.text-center
+                    img(src=(`/${audiobook.imageUrl}`) alt=audiobook.title).card-img-top
+                    .card-body
+                      h5.card-title #{audiobook.title}
+                      p.card-text #{audiobook.author}
+                      p.text-success.card-text #{audiobook.category}
+                      p
+                        strong.card-text £#{audiobook.price}
+                      form(action="/cart", method="POST")
+                        .btn-group.btn-group-sm(role="group"  )
+                          a(href=`/audiobooks/${audiobook.id}`).btn.btn-secondary Details
+                          //- if (isAuthenticated)
+                            button(type="submit").btn.btn-primary Add to Cart
+                            input(type="hidden", value=audiobook.id, name="audiobookId")
+                        input(type='hidden', name='_csrf', value=(csrfToken))
+                        input(type='hidden', name='own', value=(own === true ? 'true' : 'false'))
+        else 
+          p No Products
+
+    section.container
+      h2.my-2.my-md-3 Purchased Items
+
+      .container
+        if (purchased.length > 0)
+          each item in purchased
+            p= item.title
+        
+        else 
+          p No Item Purchesed yet

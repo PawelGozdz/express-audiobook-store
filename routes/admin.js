@@ -22,7 +22,6 @@ router.post('/add-audiobook', [
     .isString()
     .isLength({ min: 2 })
     .trim(),
-  body('imageUrl').isURL(),
   body('author')
     .isString()
     .isLength({ min: 4 })
@@ -35,7 +34,7 @@ router.post('/add-audiobook', [
   body('description')
     .isString()
     .isLength({ min: 4, max: 80 })
-    // .trim()  
+    .trim()
 ], isAuth, adminController.postAddAudiobook);
 
 router.get('/edit-audiobook/:audiobookId', isAuth, adminController.getEditAudiobook);
@@ -45,7 +44,6 @@ router.post('/edit-audiobook', [
     .isString()
     .isLength({ min: 2 })
     .trim(),
-  body('imageUrl').isURL(),
   body('author')
     .isString()
     .isLength({ min: 4 })
@@ -58,7 +56,7 @@ router.post('/edit-audiobook', [
   body('description')
     .isString()
     .isLength({ min: 4, max: 80 })
-    // .trim()  
+    .trim()  
 ], isAuth, adminController.postEditAudiobook);
 
 router.post('/delete-audiobook', isAuth, adminController.postDeleteAudiobook);

@@ -4,13 +4,14 @@ block content
   main
     section.container.text-center
       h1.my-3.my-md-4 #{pageTitle}
+      p Your own items
       hr
       .row.justify-content-center
         if audiobooks.length > 0
           each audiobook in audiobooks
             .col-8.col-sm-6.col-md-4.col-lg-3.my-2.my-lg-3
               article.card.article__card.text-center
-                img(src=audiobook.imageUrl alt=audiobook.title).card-img-top
+                img(src=(`/${audiobook.imageUrl}`) alt=audiobook.title).card-img-top
                 .card-body
                   h5.card-title #{audiobook.title}
                   p.card-text #{audiobook.author}

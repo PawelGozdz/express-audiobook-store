@@ -105,6 +105,14 @@ exports.postLogout = (req, res, next) => {
     // console.log(err);
     // res.redirect('/');
     res.redirect('/');
+    // res.render('store/index', {
+    //   audiobooks: [],
+    //   userBooks: [],
+    //   sortNewest: [],
+    //   categoryList: [],
+    //   pageTitle: 'Audiobooks.pl - Online Store',
+    //   path: '/'
+    // });
   });
 };
 

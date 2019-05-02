@@ -1,19 +1,14 @@
 const path = require('path');
+const fs = require('fs-extra');
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const csrf = require('csurf');
 const flash = require('connect-flash');
-// const Sequelize = require('sequelize');
-
-// const sequelize = new Sequelize('audiobook-store', 'root', 'Wyczeswow1', {
-//   dialect: 'mysql', host: 'localhost'
-// });
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
-//  console.log(sequelize);
-
-// console.log(SequelizeStore);
+const multer = require('multer');
+const fileHelper = require('./util/file');
 
 const sequelize = require('./util/database');
 const Audiobook = require('./models/audiobook');
@@ -22,7 +17,6 @@ const Cart = require('./models/cart');
 const CartItem = require('./models/cart-item');
 const Order = require('./models/order');
 const OrderItem = require('./models/order-item');
-// const Session = require('./util/Session');
 
 const app = express();
 const store = new SequelizeStore({
@@ -39,7 +33,12 @@ const authRoutes = require('./routes/auth');
 const errorController = require('./controllers/error');
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(
+  multer({ storage: fileHelper.storage, fileFilter: fileHelper.fileFilter }).single('image')
+);
+
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(session({
   secret: 'my-secret',
   resave: false,
@@ -65,20 +64,16 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   // console.log('SESSION USER', req.session.user);
   if (!req.session.user) {
-    // console.log('NEEEEEEEEEEEEEEEEET', req.session);
-
     return next();
   }
   User.findByPk(req.session.user.email)
     .then((user) => {
       if (!user) return next();
       req.user = user;
-      // console.log(req.user);
       next();
     })
     .catch((err) => {
       next(new Error(err));
-      // throw new Error(err);
     });
 });
 
@@ -90,7 +85,13 @@ app.get('/500', errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
-  res.redirect('/500');
+  console.log('MIDDLEWEAR error', error);
+  res.status(500).render('500', {
+    pageTitle: 'Error!',
+    path: '/500',
+    isAuthenticated: req.session.isLoggedIn,
+    csrfToken: ''
+  });
 });
 
 
