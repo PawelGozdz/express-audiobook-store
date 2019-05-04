@@ -85,7 +85,7 @@ app.get('/500', errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
-  console.log('MIDDLEWEAR error', error);
+  // console.log('MIDDLEWEAR error', error);
   res.status(500).render('500', {
     pageTitle: 'Error!',
     path: '/500',
@@ -109,14 +109,7 @@ Audiobook.belongsToMany(Order, { through: OrderItem });
 sequelize
   // .sync({ force: true })
   .sync()
-  // .then(result => User.findById(1))
-  // .then((user) => {
-  //   if (!user) {
-  //     return User.create({ name: 'Pawel', email: 'test@test.com' });
-  //   }
-  //   return user;
-  // })
-  // .then(user => user.createCart())
+
   .then((cart) => {
     app.listen(3000);
   })

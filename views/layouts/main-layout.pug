@@ -19,15 +19,6 @@ html(lang="en")
             if (isAuthenticated)
               li.nav-item
                 a(href="/your-library", class=(path === '/your-library' ? 'active' : '')).nav-link Your Library
-            //- if (isAuthenticated)
-            //-   li.nav-item
-            //-     a(href="/cart", class=(path === '/cart' ? 'active' : '')).nav-link Cart
-            //-   li.nav-item
-            //-     a(href="/orders", class=(path === '/orders' ? 'active' : '')).nav-link Orders
-            //-   li.nav-item
-            //-     a(href="/admin/audiobooks", class=(path === '/admin/audiobooks' ? 'active' : '')).nav-link Admin Audiobooks
-            //-   li.nav-item
-            //-     a(href="/admin/add-audiobook", class=(path === '/admin/add-audiobook' ? 'active' : '')).nav-link Add Audiobooks
             ul.navbar-nav.ml-auto
               if (isAuthenticated)
                 li.dropdown
