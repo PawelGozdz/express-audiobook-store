@@ -27,9 +27,6 @@ block content
                       form(action="/cart", method="POST")
                         .btn-group.btn-group-sm(role="group"  )
                           a(href=`/audiobooks/${audiobook.id}`).btn.btn-secondary Details
-                          //- if (isAuthenticated)
-                            button(type="submit").btn.btn-primary Add to Cart
-                            input(type="hidden", value=audiobook.id, name="audiobookId")
                         input(type='hidden', name='_csrf', value=(csrfToken))
                         input(type='hidden', name='own', value=(own === true ? 'true' : 'false'))
         else 
@@ -40,8 +37,22 @@ block content
 
       .container
         if (purchased.length > 0)
-          each item in purchased
-            p= item.title
+          .row.justify-content-center
+              each purchasedBook in purchased
+                .col-8.col-sm-6.col-md-4.col-lg-3.my-2.my-lg-3
+                  article.card.article__card.text-center
+                    img(src=(`/${purchasedBook.imageUrl}`) alt=purchasedBook.title).card-img-top
+                    .card-body
+                      h5.card-title #{purchasedBook.title}
+                      p.card-text #{purchasedBook.author}
+                      p.text-success.card-text #{purchasedBook.category}
+                      p
+                        strong.card-text £#{purchasedBook.price}
+                      form(action="/cart", method="POST")
+                        .btn-group.btn-group-sm(role="group"  )
+                          a(href=`/audiobooks/${purchasedBook.id}`).btn.btn-secondary Details
+                        input(type='hidden', name='_csrf', value=(csrfToken))
+                        input(type='hidden', name='own', value=(own === true ? 'true' : 'false'))
         
         else 
           p No Item Purchesed yet

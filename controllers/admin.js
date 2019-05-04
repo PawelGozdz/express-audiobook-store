@@ -32,14 +32,12 @@ exports.getUser = (req, res, next) => {
   let cart;
   let orders;
 
-  const promise =  new Promise((resolve, reject) => {
-    resolve();
-  })
-    .then(() => {
-      return req.user.getAudiobooks({
-        options: { email: req.user.email }
-      })
-    })
+  // const promise =  new Promise((resolve, reject) => {
+  //   resolve();
+  // })
+  //   .then(() => {
+  //   })
+  req.user.getAudiobooks()
   // Query a list with User's audiobooks
     .then((dbAudiobooks) => {
       audiobooks = dbAudiobooks;
@@ -244,29 +242,56 @@ exports.postEditAudiobook = (req, res, next) => {
 };
 
 exports.getAudiobooks = (req, res, next) => {
-  req.user.getAudiobooks({
-    options: { email: req.user.email }
-  })
-  // req.user.getAudiobooks()
-  // Audiobook.findAll()
+  const itemsPerPage = 4;
+  const page = +req.query.page || 1;
+  let totalItems;
+
+  Audiobook
+    .findAndCountAll({
+      where: { userEmail: req.user.email }
+    })
+    .then((count) => {
+      totalItems = count.count;
+
+      return req.user
+        .getAudiobooks({
+          limit: itemsPerPage,
+          offset: (page - 1) * itemsPerPage
+        });
+    })
     .then((audiobooks) => {
       res.render('admin/audiobooks', {
         audiobooks,
         pageTitle: 'Admin Audiobooks',
-        path: '/admin/audiobooks'
+        path: '/admin/audiobooks',
+        currentPage: page,
+        hasNextPage: itemsPerPage * page < totalItems,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(totalItems / itemsPerPage)
       });
     })
     .catch(err => console.log(err));
 };
 
-exports.postDeleteAudiobook = (req, res, next) => {
-  const { audiobookId } = req.body;
+exports.deleteAudiobook = (req, res, next) => {
+  const { audiobookId } = req.params;
   Audiobook
     .findById(audiobookId)
-    .then(audiobook => audiobook.destroy())
-    .then((result) => {
-      console.log('PRODUCT DESTROYED');
-      res.redirect('/admin/audiobooks');
+    .then((audiobook) => {
+      if (!audiobook) {
+        return next(new Error('Product not found!'));
+      }
+      fileHelper.deleteFile(audiobook.imageUrl);
+      return audiobook.destroy();
     })
-    .catch(err => console.log(err));
+    .then(() => {
+      console.log('PRODUCT DESTROYED');
+      // res.redirect('/admin/audiobooks');
+      return res.status(200).json({ message: 'Audiobook deleted from your library!' });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: 'Deleting audiobook failed!' });
+    });
 };

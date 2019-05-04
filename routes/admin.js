@@ -56,9 +56,10 @@ router.post('/edit-audiobook', [
   body('description')
     .isString()
     .isLength({ min: 4, max: 80 })
-    .trim()  
+    .trim()
 ], isAuth, adminController.postEditAudiobook);
 
-router.post('/delete-audiobook', isAuth, adminController.postDeleteAudiobook);
+// router.post('/delete-audiobook', isAuth, adminController.postDeleteAudiobook);
+router.delete('/audiobook/:audiobookId', isAuth, adminController.deleteAudiobook);
 
 module.exports = router;

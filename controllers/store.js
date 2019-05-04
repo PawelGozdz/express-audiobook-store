@@ -4,9 +4,7 @@ const OrderItem = require('../models/order-item');
 exports.getYourLibrary = (req, res, next) => {
   let audiobooks;
 
-  req.user.getAudiobooks({
-    options: { email: req.user.email }
-  })
+  req.user.getAudiobooks()
     .then((dbAudiobooks) => {
       if (!dbAudiobooks) {
         dbAudiobooks = [];
