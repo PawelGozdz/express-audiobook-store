@@ -9,6 +9,9 @@ const csrf = require('csurf');
 const flash = require('connect-flash');
 const multer = require('multer');
 const fileHelper = require('./util/file');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
 
 const sequelize = require('./util/database');
 const Audiobook = require('./models/audiobook');
@@ -32,6 +35,14 @@ const storeRoutes = require('./routes/store');
 const authRoutes = require('./routes/auth');
 const errorController = require('./controllers/error');
 
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'access.log'),
+  { flags: 'a' } // append to the file
+);
+
+app.use(helmet());
+app.use(compression());
+app.use(morgan('combined', { stream: accessLogStream }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   multer({ storage: fileHelper.storage, fileFilter: fileHelper.fileFilter }).single('image')

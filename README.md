@@ -6,7 +6,7 @@
 
 ## Middlewears:
 
-    csrf, Multer, express-session, express-validator
+    csrf, Multer, express-session, express-validator, helmet, express-compression, morgan
 
 ## Error Handling
 Basic error handling has been implementing. Both for Errors and for Page Not Found.
