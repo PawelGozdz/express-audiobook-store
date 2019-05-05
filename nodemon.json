@@ -1,8 +1,0 @@
-{
-  "env": {
-    "DB_USERNAME": "yhznlayubjijhl",
-    "DB_PASSWORD": "07e34db9932adea52760463199346c31ebeea205f6d064a2f3c7f38b1fa5cf43",
-    "DB_DATABASE": "dckgl3ud0lshou",
-    "DB_HOSTNAME": "ec2-54-247-85-251.eu-west-1.compute.amazonaws.com"
-  }
-}
