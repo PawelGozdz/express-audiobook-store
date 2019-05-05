@@ -53,9 +53,7 @@ block content
               input(
                 type="hidden",
                 value=(audiobook.id), name="audiobookId")
-              //- input(type='hidden', name='email', value=((editing || hasError) ? audiobook.userEmail : ''))
             - const status = editing ? 'Update' : 'Add Audiobook';
             input(type='hidden', name='_csrf', value=(csrfToken))
             button.btn(type="submit")= status
         .col-12.col-md-3
-

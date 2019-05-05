@@ -23,9 +23,6 @@ block content
                     input(type="hidden", value=audiobook.id, name="audiobookId")
                     input(type='hidden', name='_csrf', value=csrfToken)
                     button(type="button").btn.btn-danger Delete
-
-        
-        //- Section Pricing
         else 
           h2 No Audiobooks
       include ../includes/pagination.pug
