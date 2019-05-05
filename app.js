@@ -106,11 +106,20 @@ User.hasMany(Order);
 Order.belongsToMany(Audiobook, { through: OrderItem });
 Audiobook.belongsToMany(Order, { through: OrderItem });
 
+// sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log('Connection has been established successfully.');
+//   })
+//   .catch(err => {
+//     console.error('Unable to connect to the database:', err);
+//   });
+
 sequelize
-  .sync({ force: true })
+  // .sync({ force: true })
   .sync()
 
   .then((cart) => {
-    app.listen(3306);
+    app.listen(process.env.PORT || 3000);
   })
   .catch(err => console.log(err));

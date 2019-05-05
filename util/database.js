@@ -2,11 +2,13 @@ const Sequelize = require('sequelize');
 const db = require('./secret');
 
 const sequelize = new Sequelize(
-  'h0q380ktlub6hy1f', // db name
-  'd31tg3kvprb38tll', // db user ('root')
-  'p171aizbptovvct8', {
-  dialect: 'mysql', host: 'ivgz2rnl5rh7sphb.chr7pe7iynqr.eu-west-1.rds.amazonaws.com', logging: false
+  'dckgl3ud0lshou', // db name
+  'yhznlayubjijhl', // db user ('root')
+  '07e34db9932adea52760463199346c31ebeea205f6d064a2f3c7f38b1fa5cf43', {
+  dialect: 'postgres', host: 'ec2-54-247-85-251.eu-west-1.compute.amazonaws.com', logging: false
 });
+
+// const sequelize = new Sequelize('postgres://yhznlayubjijhl:07e34db9932adea52760463199346c31ebeea205f6d064a2f3c7f38b1fa5cf43@ec2-54-247-85-251.eu-west-1.compute.amazonaws.com:5432/dckgl3ud0lshou');
 
 module.exports = sequelize;
 
