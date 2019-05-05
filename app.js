@@ -85,7 +85,7 @@ app.get('/500', errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
-  // console.log('MIDDLEWEAR error', error);
+  console.log('MIDDLEWEAR error', error);
   res.status(500).render('500', {
     pageTitle: 'Error!',
     path: '/500',
@@ -106,20 +106,10 @@ User.hasMany(Order);
 Order.belongsToMany(Audiobook, { through: OrderItem });
 Audiobook.belongsToMany(Order, { through: OrderItem });
 
-// sequelize
-//   .authenticate()
-//   .then(() => {
-//     console.log('Connection has been established successfully.');
-//   })
-//   .catch(err => {
-//     console.error('Unable to connect to the database:', err);
-//   });
-
 sequelize
   // .sync({ force: true })
   .sync()
-
   .then((cart) => {
-    app.listen(process.env.PORT || 3000);
+    app.listen(process.env.NODE_ENV || 3000);
   })
   .catch(err => console.log(err));
