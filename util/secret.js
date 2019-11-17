@@ -1,7 +1,7 @@
 exports.secret = {
   db: 'audiobook-store',
   user: 'root',
-  password: 'Wyczeswow1',
+  password: 'pass',
   options: {
     dialect: 'mysql', host: 'localhost', logging: false
   }
